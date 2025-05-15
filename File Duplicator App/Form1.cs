@@ -162,4 +162,32 @@ namespace File_Duplicator_App
             return Regex.Replace(input, Regex.Escape(find), replace, RegexOptions.IgnoreCase);
         }
     }
+
+    public class FileDuplicatorService
+    {
+        public void DuplicateFiles(string folderPath, string find, string duplicate)
+        {
+            var folders = Directory.GetDirectories(folderPath);
+
+            foreach (var folder in folders)
+            {
+                var files = Directory.GetFiles(folder)
+                    .Where(f => Path.GetFileNameWithoutExtension(f)
+                    .Contains(find, StringComparison.OrdinalIgnoreCase));
+
+                foreach (var file in files)
+                {
+                    var ext = Path.GetExtension(file);
+                    var fileName = Path.GetFileNameWithoutExtension(file);
+                    var newFileName = fileName.Replace(find, duplicate, StringComparison.OrdinalIgnoreCase);
+                    var newFilePath = Path.Combine(folder, newFileName + ext);
+
+                    var content = File.ReadAllText(file);
+                    content = Regex.Replace(content, Regex.Escape(find), duplicate, RegexOptions.IgnoreCase);
+
+                    File.WriteAllText(newFilePath, content);
+                }
+            }
+        }
+    }
 }

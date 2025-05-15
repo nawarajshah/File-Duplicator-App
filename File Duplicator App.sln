@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "File Duplicator App", "File Duplicator App\File Duplicator App.csproj", "{B221E4FF-EAB2-462A-A0C5-95ED864A66E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDuplicatorApp.Tests", "FileDuplicatorApp.Tests\FileDuplicatorApp.Tests.csproj", "{DD5AEE4C-23DB-4A65-A294-6440F5B34D54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B221E4FF-EAB2-462A-A0C5-95ED864A66E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B221E4FF-EAB2-462A-A0C5-95ED864A66E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B221E4FF-EAB2-462A-A0C5-95ED864A66E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5AEE4C-23DB-4A65-A294-6440F5B34D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5AEE4C-23DB-4A65-A294-6440F5B34D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5AEE4C-23DB-4A65-A294-6440F5B34D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5AEE4C-23DB-4A65-A294-6440F5B34D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
