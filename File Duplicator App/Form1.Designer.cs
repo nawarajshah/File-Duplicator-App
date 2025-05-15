@@ -122,17 +122,17 @@
             // clbFolders
             // 
             clbFolders.FormattingEnabled = true;
-            clbFolders.Location = new Point(703, 25);
+            clbFolders.Location = new Point(641, 25);
             clbFolders.Name = "clbFolders";
-            clbFolders.Size = new Size(202, 312);
+            clbFolders.Size = new Size(202, 256);
             clbFolders.TabIndex = 9;
             clbFolders.MouseClick += clbFolders_MouseClick;
             // 
             // btnSaveConfig
             // 
-            btnSaveConfig.Location = new Point(568, 303);
+            btnSaveConfig.Location = new Point(641, 294);
             btnSaveConfig.Name = "btnSaveConfig";
-            btnSaveConfig.Size = new Size(129, 34);
+            btnSaveConfig.Size = new Size(202, 34);
             btnSaveConfig.TabIndex = 10;
             btnSaveConfig.Text = "Save Config";
             btnSaveConfig.UseVisualStyleBackColor = true;
@@ -142,7 +142,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(959, 450);
+            ClientSize = new Size(891, 378);
             Controls.Add(btnSaveConfig);
             Controls.Add(clbFolders);
             Controls.Add(btnSubmit);

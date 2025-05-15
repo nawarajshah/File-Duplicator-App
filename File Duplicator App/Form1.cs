@@ -107,64 +107,58 @@ namespace File_Duplicator_App
                 return;
             }
 
-            var selectedFolders = File.ReadAllLines(configFilePath)
-                .Where(line => !string.IsNullOrWhiteSpace(line))
-                .ToList();
+            string logFilePath = Path.Combine(folderPath, "duplication.log");
 
-            foreach (var folderName in selectedFolders)
+            try
             {
-                string fullFolderPath = Path.Combine(folderPath, folderName);
+                var duplicator = new FileDuplicatorService(folderPath);
+                duplicator.DuplicateFiles(folderPath, findName, duplicateName);
 
-                if (Directory.Exists(fullFolderPath))
+                var result = MessageBox.Show(
+                    $"Duplication completed. For details, see the log file:\n{logFilePath}\n\nDo you want to open the log file now?",
+                    "Duplication Completed",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information);
+
+                if (result == DialogResult.Yes)
                 {
-                    var files = Directory.GetFiles(fullFolderPath);
-
-                    foreach (var filePath in files)
+                    try
                     {
-                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
-                        string extension = Path.GetExtension(filePath);
-
-                        if (fileNameWithoutExtension.Contains(findName, StringComparison.OrdinalIgnoreCase))
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                         {
-                            string[] parts = fileNameWithoutExtension.Split('_');
-                            for (int i = 0; i < parts.Length; i++)
-                            {
-                                if (string.Equals(parts[i], findName, StringComparison.OrdinalIgnoreCase))
-                                    parts[i] = duplicateName;
-                            }
-
-                            string newFileNameWithOutExtension = string.Join("_", parts);
-                            string newFilePath = Path.Combine(fullFolderPath, newFileNameWithOutExtension + extension);
-
-                            try
-                            {
-                                File.Copy(filePath, newFilePath, overwrite: false);
-
-                                string content = File.ReadAllText(newFilePath);
-                                content = ReplaceInsensitive(content, findName, duplicateName);
-                                File.WriteAllText(newFilePath, content);
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"Failed to duplicate {filePath}: {ex.Message}");
-                                continue;
-                            }
-                        }
+                            FileName = logFilePath,
+                            UseShellExecute = true
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Could not open log file: {ex.Message}");
                     }
                 }
             }
-
-            MessageBox.Show("Duplication Completed Successfully!");
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Duplication failed: {ex.Message}\nSee the log file for details:\n{logFilePath}");
+            }
         }
 
-        private string ReplaceInsensitive(string input, string find, string replace)
-        {
-            return Regex.Replace(input, Regex.Escape(find), replace, RegexOptions.IgnoreCase);
-        }
     }
 
     public class FileDuplicatorService
     {
+        private readonly string logFilePath;
+
+        public FileDuplicatorService(string folderPath)
+        {
+            logFilePath = Path.Combine(folderPath, "duplication.log");
+        }
+
+        private void Log(string message)
+        {
+            var logEntry = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}";
+            File.AppendAllText(logFilePath, logEntry + Environment.NewLine);
+        }
+
         public void DuplicateFiles(string folderPath, string find, string duplicate)
         {
             var folders = Directory.GetDirectories(folderPath);
@@ -182,12 +176,22 @@ namespace File_Duplicator_App
                     var newFileName = fileName.Replace(find, duplicate, StringComparison.OrdinalIgnoreCase);
                     var newFilePath = Path.Combine(folder, newFileName + ext);
 
-                    var content = File.ReadAllText(file);
-                    content = Regex.Replace(content, Regex.Escape(find), duplicate, RegexOptions.IgnoreCase);
+                    try
+                    {
+                        var content = File.ReadAllText(file);
+                        content = Regex.Replace(content, Regex.Escape(find), duplicate, RegexOptions.IgnoreCase);
 
-                    File.WriteAllText(newFilePath, content);
+                        File.WriteAllText(newFilePath, content);
+
+                        Log($"SUCCESS: Duplicated '{file}' to '{newFilePath}'.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log($"ERROR: Failed to duplicate '{file}' to '{newFilePath}'. Exception: {ex.Message}");
+                    }
                 }
             }
         }
     }
+
 }

@@ -19,7 +19,7 @@ namespace FileDuplicatorApp.Tests
             var originalFile = Path.Combine(subDir, "page_abc.html");
             File.WriteAllText(originalFile, "This is abc content.");
 
-            var service = new FileDuplicatorService();
+            var service = new FileDuplicatorService(testDir);
 
             // act
             service.DuplicateFiles(testDir, "abc", "xyz");
